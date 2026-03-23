@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.chakray.isebastian.interfaces.UserService;
+import com.chakray.isebastian.models.Address;
 import com.chakray.isebastian.models.FilterAttribute;
 import com.chakray.isebastian.models.FilterOperator;
 import com.chakray.isebastian.models.User;
@@ -25,9 +26,13 @@ public class UserServiceImpl implements UserService {
 	//Método para llenar el Array
 	@PostConstruct //Se ejecutará después de iniciar el programa
 	private void fillUsers() {
-		users.add(new User("zuser@gmail.com", "Mateo Rodriguez", "44555", "contraseña", "AMARR", null));
-		users.add(new User("auser@email.com", "Juan Hernandez", "77555", "contraseña", "AJRR", null));
-		users.add(new User("uuser@yahoo.com", "Pedro García", "11555", "contraseña", "EPRR", null));
+		List<Address> genericAddress = new ArrayList<>();
+		genericAddress.add(new Address(genericAddress.size()+1, "Home", "Munson Street", "USA"));
+		genericAddress.add(new Address(genericAddress.size()+1, "Job", "Sanders Street", "USA"));
+		
+		users.add(new User("zuser@gmail.com", "Mateo Rodriguez", "44555", "contraseña", "AMARR", genericAddress));
+		users.add(new User("auser@email.com", "Juan Hernandez", "77555", "contraseña", "AJRR", genericAddress));
+		users.add(new User("uuser@yahoo.com", "Pedro García", "11555", "contraseña", "EPRR", genericAddress));
 	}
 	
 	//Método para obtener todos los usuarios
@@ -90,6 +95,7 @@ public class UserServiceImpl implements UserService {
 		};
 	}
 
+	//Método para crear nuevos usuarios
 	@Override
 	public User createUser(User user) {
 		//Crear un nuevo objeto con los atributos recibidos (se instancia la clase para validaciones)
@@ -100,6 +106,36 @@ public class UserServiceImpl implements UserService {
 		
 		//Retornar el último elemento añadido al arreglo
 		return users.getLast();
+	}
+
+	//Método para actualizar los datos de un usuario
+	@Override
+	public User updateUser(User user, String id) {
+		//Se convierte el ID recibido en UUID
+		UUID idAux = UUID.fromString(id);
+		//Mediante stream se busca el User que tenga el mismo ID, si no se devuelve error
+		User update = users.stream().filter(u -> u.getId().equals(idAux)).findFirst().orElseThrow();
+				
+		//Actualización de los campos
+		update.setEmail(user.getEmail());
+		update.setName(user.getName());
+		update.setPhone(user.getPhone());
+		update.setTax_id(user.getTax_id());	
+		update.setAddresses(user.getAddresses());
+		
+		//Si la contraseña no esta vacía o no es nula, se actualiza
+		if(!user.getPassword().isBlank() || !user.getPassword().equals(null)) {
+			update.setPassword(user.getPassword());
+		}
+				
+		//Retornar el objeto Usuario actualizado
+		return update;
+	}
+
+	@Override
+	public User deleteUser(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
