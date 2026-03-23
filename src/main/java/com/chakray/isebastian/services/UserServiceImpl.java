@@ -51,9 +51,7 @@ public class UserServiceImpl implements UserService {
 			case name -> users.sort(Comparator.comparing(User::getName));
 			case phone -> users.sort(Comparator.comparing(User::getPhone));
 			case tax_id -> users.sort(Comparator.comparing(User::getTax_id));
-			default -> {
-				return users;
-			}
+			default -> throw new RuntimeException("Atributo incorrecto");
 		}
 		return users;
 	}
@@ -73,7 +71,7 @@ public class UserServiceImpl implements UserService {
 			case eq -> users.stream().filter(user -> selectAttribute(filter, user).equals(value)).toList();
 			case ew -> users.stream().filter(user -> selectAttribute(filter, user).endsWith(value)).toList();
 			case sw -> users.stream().filter(user -> selectAttribute(filter, user).startsWith(value)).toList();		
-			default -> Collections.emptyList();
+			default -> throw new RuntimeException("Operador incorrecto");
 		};
 	}
 	
@@ -91,7 +89,7 @@ public class UserServiceImpl implements UserService {
 			case name -> user.getName();
 			case phone -> user.getPhone();
 			case tax_id -> user.getTax_id();
-			default -> "";
+			default -> throw new RuntimeException("Atributo incorrecto");
 		};
 	}
 
@@ -133,9 +131,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User deleteUser(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public void deleteUser(String id) {
+		//Se convierte el ID recibido en UUID
+		UUID idAux = UUID.fromString(id);
+		//Mediante stream se busca el User que tenga el mismo ID, si no se devuelve error
+		User delete = users.stream().filter(u -> u.getId().equals(idAux)).findFirst().orElseThrow();
+		
+		//Eliminar el usuario
+		users.remove(delete);
 	}
 	
 	
