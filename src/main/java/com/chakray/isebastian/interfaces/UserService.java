@@ -19,5 +19,9 @@ public interface UserService {
 	//Crear un nuevo usuario
 	public User createUser(User user);
 	
+	//Modificar un usuario de acuerdo con el ID recibido
+	public User updateUser(User user, String id);
 	
+	//Eliminar el usuario del ID recibido
+	public User deleteUser(String id);
 }

@@ -1,5 +1,6 @@
 package com.chakray.isebastian.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class UserController {
 		
 	//Endpoint para obtener todos los usuarios y obtenerlos ordenados usando el parametro sortedBy
 	@Tag(name = "Users Sorted By")
-	@Operation(summary = "Get All User Sorted By a Specific Attribute",
+	@Operation(summary = "Get All User Sorted By Specific Attribute",
 	description = "Return a list of users stored in the array sorted by the attribute in the query parameter sortedBy")
 	@GetMapping(name = "/users", params = "!filter")
 	public ResponseEntity<List<User>> getUsers(@RequestParam (required = false) FilterAttribute sortedBy){
@@ -38,7 +39,7 @@ public class UserController {
 	
 	//Endpoint para filtrar los Usuarios con el parametro Filter
 	@Tag(name = "Users Filter")
-	@Operation(summary = "Get All User Filter By a Specific Attribute",
+	@Operation(summary = "Get All User Filter By Specific Attribute",
 	description = "Return a list of users stored in the array filtered by the attribute in the query parameter filter")
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> getUsersFilter(@Parameter(example = "name+co+z") @RequestParam String filter){
@@ -54,19 +55,41 @@ public class UserController {
         		else return ResponseEntity.ok(userSrv.getUsersFilter(fil [0], fil[1], fil[2]));
     		}catch(Exception e) {
     			//Devolver un Response Bad Request si hubo errores
-        		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
     		}    		
     	} else {
     		//Devolver un Response Bad Request
-    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
     	}
     }
 	
-	//Endpoint para filtrar los Usuarios con el parametro Filter
+	//Endpoint para crear nuevos Usuarios
 	@Tag(name = "Create User")
-	@Operation(summary = "Create a new User", description = " Store a new user in the array")
+	@Operation(summary = "Create a new User", description = "Store a new user in the array")
 	@PostMapping("/users")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-		return ResponseEntity.ok(userSrv.createUser(user));
+		try {
+			//Devolver un Response OK y mostrar el usuario nuevo
+			return ResponseEntity.ok(userSrv.createUser(user));
+		}catch(Exception e) {
+			//Devolver un Response Bad Request si hubo errores
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}   
 	}
+	
+	//Endpoint para modificar Usuarios mediante el campo ID
+	@Tag(name = "Update User")
+	@Operation(summary = "Update a User Attribute or Attributes by ID", description = "Update an user attribute by Id")
+	@PatchMapping("/users/{id}")
+	public ResponseEntity<User> updateUser(@Valid @RequestBody User user, @PathVariable String id){
+		try {
+			//Devolver un Response OK y mostrar el usuario modificado
+			return ResponseEntity.ok(userSrv.updateUser(user, id));
+		}catch(Exception e) {
+			//Devolver un Response Bad Request si hubo errores
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}   
+	}
+	
+	
 }
