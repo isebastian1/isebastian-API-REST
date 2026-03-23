@@ -1,8 +1,11 @@
 package com.chakray.isebastian.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 //Clase Domicilio
 public class Address {
 	//Atributos
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Integer id;
 	private String name;
 	private String street;

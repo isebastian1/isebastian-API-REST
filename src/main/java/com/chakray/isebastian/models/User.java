@@ -27,6 +27,7 @@ public class User {
 	private String password;
 	@NotNull
 	private String tax_id;
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private String created_at;
 	@NotNull
 	private List<Address> addresses;
