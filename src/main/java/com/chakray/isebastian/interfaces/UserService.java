@@ -23,5 +23,5 @@ public interface UserService {
 	public User updateUser(User user, String id);
 	
 	//Eliminar el usuario del ID recibido
-	public User deleteUser(String id);
+	public void deleteUser(String id);
 }
