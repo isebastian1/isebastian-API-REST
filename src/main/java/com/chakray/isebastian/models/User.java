@@ -1,6 +1,9 @@
 package com.chakray.isebastian.models;
 
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +15,7 @@ public class User {
 	private String email;
 	private String name;
 	private String phone;
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	private String tax_id;
 	private String created_at;
@@ -19,8 +23,8 @@ public class User {
 	
 	//Métodos
 	//Constructor
-	public User(UUID id, String email, String name, String phone, String password, String tax_id, Address[] addresses) {
-        this.setId(id);
+	public User(String email, String name, String phone, String password, String tax_id, Address[] addresses) {
+        this.setId();
         this.setEmail(email);
         this.setName(name);
         this.setPhone(phone);
@@ -35,8 +39,9 @@ public class User {
 		return id;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	private void setId() {
+		//Asignarle un dato UUID aleatorio 
+		this.id = UUID.randomUUID();
 	}
 
 	public String getEmail() {
@@ -67,8 +72,7 @@ public class User {
 		this.password = password;
 	}
 	
-	//En privado para no mostrarse en el JSON
-	private String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
@@ -84,7 +88,7 @@ public class User {
 		return created_at;
 	}
 
-	public void setCreated_at() {
+	private void setCreated_at() {
 		//Declarar el formato de la fecha
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-mm-yyyy HH:mm");
 		//Formatear la fecha de Madagascar y almacenarla en String
