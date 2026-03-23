@@ -14,6 +14,7 @@ import com.chakray.isebastian.models.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 //Controlador
 @RestController
@@ -28,7 +29,7 @@ public class UserController {
 	@Operation(summary = "Get All User Sorted By a Specific Attribute",
 	description = "Return a list of users stored in the array sorted by the attribute in the query parameter sortedBy")
 	@GetMapping(name = "/users", params = "!filter")
-	public ResponseEntity<List<User>> users(@RequestParam (required = false) FilterAttribute sortedBy){
+	public ResponseEntity<List<User>> getUsers(@RequestParam (required = false) FilterAttribute sortedBy){
 		//Devolver un Response OK y enviar el parametro sortedBy
 		if(sortedBy != null) return ResponseEntity.ok(userSrv.getUsersSortedBy(sortedBy));
 		//Devolver un Response OK y traer todos los usuarios
@@ -39,9 +40,8 @@ public class UserController {
 	@Tag(name = "Users Filter")
 	@Operation(summary = "Get All User Filter By a Specific Attribute",
 	description = "Return a list of users stored in the array filtered by the attribute in the query parameter filter")
-	
 	@GetMapping("/users")
-	public ResponseEntity<List<User>> usersFilter(@Parameter(example = "name+co+z") @RequestParam String filter){
+	public ResponseEntity<List<User>> getUsersFilter(@Parameter(example = "name+co+z") @RequestParam String filter){
     	if(filter != null) {
     		//Devolver un Response OK
     		try {
@@ -61,4 +61,12 @@ public class UserController {
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     	}
     }
+	
+	//Endpoint para filtrar los Usuarios con el parametro Filter
+	@Tag(name = "Create User")
+	@Operation(summary = "Create a new User", description = " Store a new user in the array")
+	@PostMapping("/users")
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user){
+		return ResponseEntity.ok(userSrv.createUser(user));
+	}
 }
