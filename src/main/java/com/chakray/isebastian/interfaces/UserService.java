@@ -3,6 +3,7 @@ package com.chakray.isebastian.interfaces;
 import java.util.List;
 
 import com.chakray.isebastian.models.FilterAttribute;
+import com.chakray.isebastian.models.Login;
 import com.chakray.isebastian.models.User;
 
 //Interface para el Servicio de Usuarios
@@ -24,4 +25,7 @@ public interface UserService {
 	
 	//Eliminar el usuario del ID recibido
 	public void deleteUser(String id);
+	
+	//Login
+	public boolean loginValidation(Login loginData);
 }
