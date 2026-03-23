@@ -25,9 +25,9 @@ public class UserServiceImpl implements UserService {
 	//Método para llenar el Array
 	@PostConstruct //Se ejecutará después de iniciar el programa
 	private void fillUsers() {
-		users.add(new User(UUID.randomUUID(), "zuser@email.com", "Mateo", "44555", "contraseña", "AMARR", null));
-		users.add(new User(UUID.randomUUID(), "auser@email.com", "Juan", "77555", "contraseña", "AJRR", null));
-		users.add(new User(UUID.randomUUID(), "uuser@email.com", "Pedro", "11555", "contraseña", "EPRR", null));
+		users.add(new User("zuser@gmail.com", "Mateo Rodriguez", "44555", "contraseña", "AMARR", null));
+		users.add(new User("auser@email.com", "Juan Hernandez", "77555", "contraseña", "AJRR", null));
+		users.add(new User("uuser@yahoo.com", "Pedro García", "11555", "contraseña", "EPRR", null));
 	}
 	
 	//Método para obtener todos los usuarios
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 		//Switch del Enum class (FilterAttribute) para obtener el atributo de la clase para el filtro
 		//Se retorna el valor obtenido
 		return switch(filterAux) {
-			case created_at -> user.getCreated_at(); //Por ejemplo, si el Filter es created_at se obtiene el getter de created_at
+			case created_at -> user.getCreated_at(); //Por ejemplo, si el Filter es created_at se obtiene su getter
 			case email -> user.getEmail();
 			case id -> user.getId().toString();
 			case name -> user.getName();
@@ -89,4 +89,18 @@ public class UserServiceImpl implements UserService {
 			default -> "";
 		};
 	}
+
+	@Override
+	public User createUser(User user) {
+		//Crear un nuevo objeto con los atributos recibidos (se instancia la clase para validaciones)
+		User userAux = new User(user.getEmail(), user.getName(), user.getPhone(), user.getPassword(), 
+				user.getTax_id(), user.getAddresses());
+		//Añadir el usuario al Array
+		users.add(userAux);
+		
+		//Retornar el último elemento añadido al arreglo
+		return users.getLast();
+	}
+	
+	
 }
