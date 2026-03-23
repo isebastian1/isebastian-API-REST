@@ -1,7 +1,9 @@
 package com.chakray.isebastian.models;
 
 import java.util.UUID;
-import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 //Clase Usuario
 public class User {
@@ -12,7 +14,7 @@ public class User {
 	private String phone;
 	private String password;
 	private String tax_id;
-	private Instant created_at;
+	private String created_at;
 	private Address[] addresses;
 	
 	//Métodos
@@ -24,7 +26,7 @@ public class User {
         this.setPhone(phone);
         this.setPassword(password);
         this.setTax_id(tax_id);
-        this.setCreated_at(Instant.now()); //Obtener la fecha y hora actual
+        this.setCreated_at();
         this.setAddresses(addresses);
 	}
 	
@@ -78,11 +80,16 @@ public class User {
 		this.tax_id = tax_id;
 	}
 
-	public Instant getCreated_at() {
+	public String getCreated_at() {
 		return created_at;
 	}
 
-	public void setCreated_at(Instant created_at) {
+	public void setCreated_at() {
+		//Declarar el formato de la fecha
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-mm-yyyy HH:mm");
+		//Formatear la fecha de Madagascar y almacenarla en String
+		String created_at = ZonedDateTime.now(ZoneId.of("Indian/Antananarivo")).format(format);
+		
 		this.created_at = created_at;
 	}
 
