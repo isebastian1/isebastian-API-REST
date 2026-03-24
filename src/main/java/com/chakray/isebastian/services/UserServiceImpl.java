@@ -205,7 +205,8 @@ public class UserServiceImpl implements UserService {
 		update.setName(user.getName());
 		update.setPhone(user.getPhone());
 		update.setTax_id(user.getTax_id());	
-		update.setAddresses(user.getAddresses());
+		//Llamar al método para añadir los nuevos domicilios
+		update.setAddresses(fillAddressList(user.getAddresses()));
 		
 		//Si la contraseña no esta vacía o no es nula, se actualiza
 		if(!user.getPassword().isBlank() || !user.getPassword().equals(null)) {
