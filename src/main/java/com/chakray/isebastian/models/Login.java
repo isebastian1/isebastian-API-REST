@@ -1,33 +1,30 @@
 package com.chakray.isebastian.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.validation.constraints.NotNull;
 
 //Clase para el Login
 public class Login {
 	//Atributos
-	@JsonProperty("tax_id")
 	@NotNull
-	private String tax_id;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private String username;
 	@NotNull
 	private String password;
 	
-	//Constructor
-	public Login(){}
-	
-	public Login(String tax_id, String password) {
-		this.setTax_id(tax_id);
+	//Constructor	
+	public Login(){
+		
+	}
+	public Login(String username, String password) {
+		this.setUsername(username);
 		this.setPassword(password);
 	}
 
-	public String getTax_id() {
-		return tax_id;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setTax_id(String tax_id) {
-		this.tax_id = tax_id;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
