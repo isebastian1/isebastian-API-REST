@@ -36,7 +36,14 @@ public class LoginController {
 	public ResponseEntity<?> loginAuth(@Valid @RequestBody (required = true) Login loginData){
 		try {
 			//Devolver Response Entity Ok si los datos son correctos
-			return ResponseEntity.ok(userSrv.loginValidation(loginData));		
+			Boolean success = userSrv.loginValidation(loginData);
+			
+			if (success) return ResponseEntity.ok(success);
+			else {
+				error.put("error", "Contraseña incorrecta");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	    				.body(error);
+			}
 		}catch(Exception e) {
 			//En caso de error, devolver Response Entity BadRequest con el error
 			error.put("error", "Error en el Login: " + e.getMessage());
