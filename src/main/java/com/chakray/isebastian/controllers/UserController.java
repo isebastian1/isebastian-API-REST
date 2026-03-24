@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.chakray.isebastian.interfaces.UserService;
-import com.chakray.isebastian.models.FilterAttribute;
 import com.chakray.isebastian.models.User;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +45,7 @@ public class UserController {
 	@Operation(summary = "Get All User Filter By Specific Attribute",
 	description = "Return a list of users stored in the array filtered by the attribute in the query parameter filter")
 	@GetMapping(value = "/users", params = "filter")
-	public ResponseEntity<?> getUsersFilter(@Parameter(example = "name+co+z") @RequestParam String filter){
+	public ResponseEntity<?> getUsersFilter(@Parameter(example = "name+co+Si") @RequestParam String filter){
     	if(filter != null) {
     		//Devolver un Response OK
     		try {

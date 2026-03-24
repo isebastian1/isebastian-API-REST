@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		genericAddress.add(new Address(genericAddress.size()+1, "Job", "Sanders Street", "MX"));
 		
 		users.add(new User("zuser@gmail.com", "Harry", "4455561030", encryptorSrv.encrypt("contraseña"), "MAHA010275S98", genericAddress));
-		users.add(new User("auser@email.com", "Juan", "5500114790", encryptorSrv.encrypt("H0l4Mund0"), "APJU101000J30", genericAddress));
+		users.add(new User("auser@email.com", "Juan", "5550114790", encryptorSrv.encrypt("H0l4Mund0"), "APJU101000J30", genericAddress));
 		users.add(new User("uuser@yahoo.com", "Simón", "+525501369745", encryptorSrv.encrypt("C0ntr4s3n4"), "PESI200100J30", genericAddress));
 	}
 	
