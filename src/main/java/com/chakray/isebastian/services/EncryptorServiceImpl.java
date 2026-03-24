@@ -49,6 +49,7 @@ public class EncryptorServiceImpl implements EncryptorService {
 		cipher.init(Cipher.ENCRYPT_MODE, getSecretKey());
 		//Encriptar la contraseña y guardarla en una nueva variable
 		byte[] encryptedPassword = cipher.doFinal(password.getBytes());
+		
 		//Retornar un String con la contraseña codificada
 		return Base64.getEncoder().encodeToString(encryptedPassword);
 	}
@@ -64,7 +65,7 @@ public class EncryptorServiceImpl implements EncryptorService {
 		byte[] decodedPasswoord = Base64.getDecoder().decode(password);
 		//Desencriptar la contraseña que antes fue decodificada
 		byte[] decryptedPassword = cipher.doFinal(decodedPasswoord);
-		//Retornar un String con la contraseña codificada
-		return decryptedPassword.toString();
+		//Retornar un String con la contraseña decodificada
+		return new String(decryptedPassword);
 	}
 }
