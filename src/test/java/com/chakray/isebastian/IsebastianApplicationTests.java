@@ -49,7 +49,7 @@ class IsebastianApplicationTests {
 	@Test
 	void getUsersSortedBy(){	
 		//Invocar el método para obtener usuarios ordenados de acuerdo al parametro sortedBy
-		List<User> users = userServ.getUsersSortedBy(FilterAttribute.name);
+		List<User> users = userServ.getUsersSortedBy("name");
 		
 		//Verificar que el primer nombre sea Harry
 		assertEquals("Harry", users.getFirst().getName());

@@ -67,15 +67,24 @@ public class UserServiceImpl implements UserService {
 
 	//Método para obtener todos los usuarios ordenados
 	@Override
-	public List<User> getUsersSortedBy(FilterAttribute sortedBy) {
-		switch(sortedBy) {
+	public List<User> getUsersSortedBy(String sortedBy) {
+		//Declarar variable del Enum Class
+		FilterAttribute attributeAux;
+		//Convertir el String sortedBy en la constante del Enum Class
+		try {
+			attributeAux = FilterAttribute.valueOf(sortedBy);
+		}catch(Exception e) {
+			//En caso de error, retornar los usuarios
+			return getUsers();
+		}
+		
+		switch(attributeAux) {
 			case created_at -> users.sort(Comparator.comparing(User::getCreated_at));
 			case email -> users.sort(Comparator.comparing(User::getEmail));
 			case id -> users.sort(Comparator.comparing(User::getId));
 			case name -> users.sort(Comparator.comparing(User::getName));
 			case phone -> users.sort(Comparator.comparing(User::getPhone));
 			case tax_id -> users.sort(Comparator.comparing(User::getTax_id));
-			default -> throw new RuntimeException("Atributo incorrecto");
 		}
 		return users;
 	}

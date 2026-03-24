@@ -2,7 +2,6 @@ package com.chakray.isebastian.interfaces;
 
 import java.util.List;
 
-import com.chakray.isebastian.models.FilterAttribute;
 import com.chakray.isebastian.models.Login;
 import com.chakray.isebastian.models.User;
 
@@ -12,7 +11,7 @@ public interface UserService {
 	public List<User> getUsers();
 	
 	//Obtener usuarios ordenados de acuerdo al atributo sortedBy
-	public List<User> getUsersSortedBy(FilterAttribute sortedBy);
+	public List<User> getUsersSortedBy(String sortedBy);
 	
 	//Obtener usuarios filtrados de acuerdo al atributo Filter
 	public List<User> getUsersFilter(String filter, String operator, String value);

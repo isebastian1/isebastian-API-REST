@@ -34,7 +34,7 @@ public class UserController {
 	@Operation(summary = "Get All User Sorted By Specific Attribute",
 	description = "Return a list of users stored in the array sorted by the attribute in the query parameter sortedBy")
 	@GetMapping(value = "/users", params = "sortedBy")
-	public ResponseEntity<List<User>> getUsers(@RequestParam (required = false) FilterAttribute sortedBy){
+	public ResponseEntity<List<User>> getUsers(@RequestParam (required = false) String sortedBy){
 		//Devolver un Response OK y enviar el parametro sortedBy
 		if(sortedBy != null) return ResponseEntity.ok(userSrv.getUsersSortedBy(sortedBy));
 		//Devolver un Response OK y traer todos los usuarios
