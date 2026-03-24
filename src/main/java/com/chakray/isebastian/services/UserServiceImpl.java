@@ -185,6 +185,7 @@ public class UserServiceImpl implements UserService {
 		return update;
 	}
 
+	//Método para eliminar el usuario
 	@Override
 	public void deleteUser(String id) {
 		//Se convierte el ID recibido en UUID
@@ -196,15 +197,24 @@ public class UserServiceImpl implements UserService {
 		users.remove(delete);
 	}
 	
-	
+	//Método para la validación del Login
 	@Override
-	public boolean loginValidation(Login loginData){		
-		User loger = users.stream().filter(u -> u.getTax_id().equals(loginData.getTax_id())).findFirst().orElseThrow();
-		System.out.print(loger.getName());
+	public boolean loginValidation(Login loginData) {
+		//Declarar variable para el usuario a logearse
+		User loger;
+		
+		try { //Buscar un usuario con el mismo tax_id
+			 loger = users.stream().filter(u -> u.getTax_id().equals(loginData.getUsername())).findFirst().orElseThrow();
+		}catch(Exception e) { //En caso de no encontrarlo
+			throw new RuntimeException("No existe un usuario con este username (tax_id)");
+		}
 		try {
+			//Almacenar la contraseña decodificada
 			String correctPassword = encryptorSrv.decrypt(loger.getPassword());
+			//Comparar ambas contraseñas, retornar true si fue exitoso
 			return correctPassword.equals(loginData.getPassword());
 		}catch(Exception e) {
+			//Retornar false si falló
 			return false;
 		}		
 	}
