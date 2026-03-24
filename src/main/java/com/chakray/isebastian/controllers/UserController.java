@@ -84,9 +84,10 @@ public class UserController {
 			//Devolver un Response OK y mostrar el usuario nuevo
 			return ResponseEntity.ok(userSrv.createUser(user));
 		}catch(Exception e) {
+			error.put("error", "Ocurrió un error al guardar el Usuario: " + e.getMessage());
 			//Devolver un Response Bad Request si hubo errores
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"Ocurrió un error al guardar el Usuario\"}");
+    				.body(error);
 		}   
 	}
 	
@@ -99,9 +100,10 @@ public class UserController {
 			//Devolver un Response OK y mostrar el usuario modificado
 			return ResponseEntity.ok(userSrv.updateUser(user, id));
 		}catch(Exception e) {
+			error.put("error", "Ocurrió un error al modificar el Usuario: " + e.getMessage());
 			//Devolver un Response Bad Request si hubo errores
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"No existe un usuario con este ID\"}");
+    				.body(error);
 		}   
 	}
 	
@@ -115,9 +117,10 @@ public class UserController {
 			userSrv.deleteUser(id);
 			return ResponseEntity.noContent().build();
 		}catch(Exception e) {
+			error.put("error", "Ocurrió un error al eliminar el Usuario: " + e.getMessage());
 			//Devolver un Response Bad Request si hubo errores
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"Ocurrió un error al eliminar el Usuario\"}");
+    				.body(error);
 		}   
 	}
 }
