@@ -41,9 +41,22 @@ public class UserServiceImpl implements UserService {
 		genericAddress.add(new Address(genericAddress.size()+1, "Home", "Munson Street", "MX"));
 		genericAddress.add(new Address(genericAddress.size()+1, "Job", "Sanders Street", "MX"));
 		
-		users.add(new User("zuser@gmail.com", "Harry", "44555", encryptorSrv.encrypt("contraseña"), "AMARR", genericAddress));
-		users.add(new User("auser@email.com", "Juan", "77555", encryptorSrv.encrypt("H0l4Mund0"), "AJRR", genericAddress));
-		users.add(new User("uuser@yahoo.com", "Simón", "11555", encryptorSrv.encrypt("C0ntr4s3n4"), "EPRR", genericAddress));
+		users.add(new User("zuser@gmail.com", "Harry", "4455561030", encryptorSrv.encrypt("contraseña"), "MAHA010275S98", genericAddress));
+		users.add(new User("auser@email.com", "Juan", "5500114790", encryptorSrv.encrypt("H0l4Mund0"), "APJU101000J30", genericAddress));
+		users.add(new User("uuser@yahoo.com", "Simón", "+525501369745", encryptorSrv.encrypt("C0ntr4s3n4"), "PESI200100J30", genericAddress));
+	}
+	
+	//Método para asegurarse que el tax_id es unico
+	private boolean verifyTaxId(String tax_id) {
+		try {
+			//Encontrar algún Usuario con el mismo tax_id, si no lanzar error
+			users.stream().filter(u -> u.getTax_id().equals(tax_id)).findFirst().orElseThrow();
+			//Si se encontró, retornar true
+			return true;
+		}catch(Exception e) {
+			//Se no se encontró, retornar false
+			return false;
+		}	
 	}
 	
 	//Método para obtener todos los usuarios
@@ -122,6 +135,11 @@ public class UserServiceImpl implements UserService {
 	//Método para crear nuevos usuarios
 	@Override
 	public User createUser(User user) {
+		//Invocar el método para verificar si el Tax_Id es único
+		if(verifyTaxId(user.getTax_id())) {
+			throw new RuntimeException("Ya existe un Usuario con este tax_id");
+		}
+		
 		//Crear un nuevo objeto con los atributos recibidos (se instancia la clase para validaciones)
 		//Se llama el método para llenar la lista de domicilios, para asignar un ID incrementable
 		try {
@@ -159,8 +177,19 @@ public class UserServiceImpl implements UserService {
 	public User updateUser(User user, String id) {
 		//Se convierte el ID recibido en UUID
 		UUID idAux = UUID.fromString(id);
+		
+		User update;
 		//Mediante stream se busca el User que tenga el mismo ID, si no se devuelve error
-		User update = users.stream().filter(u -> u.getId().equals(idAux)).findFirst().orElseThrow();
+		try {
+			update = users.stream().filter(u -> u.getId().equals(idAux)).findFirst().orElseThrow();
+		}catch(Exception e) {
+			throw new RuntimeException("No existe un usuario con este ID");
+		}
+		
+		//Invocar el método para verificar si el Tax_Id es único
+		if(verifyTaxId(user.getTax_id())) {
+			throw new RuntimeException("Ya existe un Usuario con este tax_id");
+		}
 				
 		//Actualización de los campos
 		update.setEmail(user.getEmail());
