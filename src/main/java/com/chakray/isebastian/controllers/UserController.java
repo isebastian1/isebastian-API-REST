@@ -1,9 +1,12 @@
 package com.chakray.isebastian.controllers;
 
+import java.lang.ModuleLayer.Controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,9 @@ public class UserController {
 	
 	//Declarar una variable map para los errores
 	private Map<String, String> error = new HashMap<>();
+	
+	//Logger
+	private static final Logger log = LoggerFactory.getLogger(Controller.class);
 		
 	//Endpoint para obtener todos los usuarios y obtenerlos ordenados usando el parametro sortedBy
 	@Tag(name = "Users Sorted By")
@@ -34,6 +40,7 @@ public class UserController {
 	description = "Return a list of users stored in the array sorted by the attribute in the query parameter sortedBy")
 	@GetMapping(value = "/users", params = "sortedBy")
 	public ResponseEntity<List<User>> getUsers(@RequestParam (required = false) String sortedBy){
+		log.info("Se accedió al Endpoint - GetUsers");
 		//Devolver un Response OK y enviar el parametro sortedBy
 		if(sortedBy != null) return ResponseEntity.ok(userSrv.getUsersSortedBy(sortedBy));
 		//Devolver un Response OK y traer todos los usuarios
@@ -46,6 +53,7 @@ public class UserController {
 	description = "Return a list of users stored in the array filtered by the attribute in the query parameter filter")
 	@GetMapping(value = "/users", params = "filter")
 	public ResponseEntity<?> getUsersFilter(@Parameter(example = "name+co+Si") @RequestParam String filter){
+		log.info("Se accedió al Endpoint - Filter");
     	if(filter != null) {
     		//Devolver un Response OK
     		try {
@@ -79,6 +87,7 @@ public class UserController {
 	@Operation(summary = "Create a new User", description = "Store a new user in the array")
 	@PostMapping("/users")
 	public ResponseEntity<?> createUser(@Valid @RequestBody User user){
+		log.info("Se accedió al Endpoint - Create");
 		try {
 			//Devolver un Response OK y mostrar el usuario nuevo
 			return ResponseEntity.ok(userSrv.createUser(user));
@@ -95,6 +104,7 @@ public class UserController {
 	@Operation(summary = "Update a User Attribute or Attributes by ID", description = "Update an user attribute by Id")
 	@PatchMapping("/users/{id}")
 	public ResponseEntity<?> updateUser(@Valid @RequestBody User user, @PathVariable String id){
+		log.info("Se accedió al Endpoint - Update");
 		try {
 			//Devolver un Response OK y mostrar el usuario modificado
 			return ResponseEntity.ok(userSrv.updateUser(user, id));
@@ -111,6 +121,7 @@ public class UserController {
 	@Operation(summary = "Delete a User by ID", description = "Remove an user from the array by Id")
 	@DeleteMapping("/users/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable String id){
+		log.info("Se accedió al Endpoint - Delete");
 		try {
 			//Devolver un Response Vacio
 			userSrv.deleteUser(id);

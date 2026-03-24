@@ -1,8 +1,11 @@
 package com.chakray.isebastian.controllers;
 
+import java.lang.ModuleLayer.Controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +32,15 @@ public class LoginController {
 	//Declarar una variable map para los errores
 	private Map<String, String> error = new HashMap<>();
 	
+	//Logger
+	private static final Logger log = LoggerFactory.getLogger(Controller.class);
+	
 	//Endpoint para obtener todos los usuarios y obtenerlos ordenados usando el parametro sortedBy
 	@Tag(name = "Login")
 	@Operation(summary = "Login with TaxID and Password", description = "for user authentication.")
 	@PostMapping("/login")
 	public ResponseEntity<?> loginAuth(@Valid @RequestBody (required = true) Login loginData){
+		log.info("Se accedió al Endpoint - Login");
 		try {
 			//Devolver Response Entity Ok si los datos son correctos
 			Boolean success = userSrv.loginValidation(loginData);
