@@ -10,6 +10,7 @@ import jakarta.validation.constraints.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 //Clase Usuario
 public class User {
@@ -36,10 +37,23 @@ public class User {
 	//Constructor
 	public User(String email, String name, String phone, String password, String tax_id, List<Address> addresses) {
 		//Declarar el formato de la fecha
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm");
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm");	
 		
-		//Formatear la fecha de Madagascar y almacenarla en String
-		String created_at = ZonedDateTime.now(ZoneId.of("Indian/Antananarivo")).format(format);
+		//Declarar el parametro para el tax_id usando una expresión regular
+		Pattern patternT = Pattern.compile("^[A-Z]{4}[0-9]{6}[A-Z][0-9]{2}$");
+		//Declarar un boolean para verificar si el tax_id cumple con la expresión regular
+		boolean matcherT = patternT.matcher(tax_id).find();
+
+		//Si no cumple, enviar error
+		if(!matcherT) throw new RuntimeException("El formato del tax_id es incorrecto, debe ser AAAA010203A00");
+	
+		//Declarar el parametro para el phone usando una expresión regular
+		Pattern patternP = Pattern.compile("^(\\+[0-9]{2})[0-9]{10}$|^[0-9]{10}$");
+		//Declarar un boolean para verificar si el phone cumple con la expresión regular
+		boolean matcherP = patternP.matcher(phone).find();
+		
+		//Si no cumple, enviar error
+		if(!matcherP) throw new RuntimeException("El formato del phone es incorrecto, puede ser +121234567890 1234567890");
 		
         this.id = UUID.randomUUID(); //Asignarle un dato UUID aleatorio 
         this.setEmail(email);
@@ -47,10 +61,13 @@ public class User {
         this.setPhone(phone);
         this.setPassword(password);
         this.setTax_id(tax_id);
-        this.created_at = created_at;
+        //Formatear la fecha de Madagascar y almacenarla en String
+        this.created_at = ZonedDateTime.now(ZoneId.of("Indian/Antananarivo")).format(format);;
         this.setAddresses(addresses);
 	}
 	
+	public User() {}
+
 	//Getters & Setters
 	public UUID getId() {
 		return id;
