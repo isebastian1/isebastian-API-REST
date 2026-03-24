@@ -1,7 +1,8 @@
 package com.chakray.isebastian.controllers;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,19 +18,22 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-//Controlador
+//Controlador User
 @RestController
 @CrossOrigin
 public class UserController {
 	//Inyectar servicio
 	@Autowired
     private UserService userSrv;
+	
+	//Declarar una variable map para los errores
+	private Map<String, String> error = new HashMap<>();
 		
 	//Endpoint para obtener todos los usuarios y obtenerlos ordenados usando el parametro sortedBy
 	@Tag(name = "Users Sorted By")
 	@Operation(summary = "Get All User Sorted By Specific Attribute",
 	description = "Return a list of users stored in the array sorted by the attribute in the query parameter sortedBy")
-	@GetMapping(name = "/users", params = "!filter")
+	@GetMapping(value = "/users", params = "sortedBy")
 	public ResponseEntity<List<User>> getUsers(@RequestParam (required = false) FilterAttribute sortedBy){
 		//Devolver un Response OK y enviar el parametro sortedBy
 		if(sortedBy != null) return ResponseEntity.ok(userSrv.getUsersSortedBy(sortedBy));
@@ -41,28 +45,33 @@ public class UserController {
 	@Tag(name = "Users Filter")
 	@Operation(summary = "Get All User Filter By Specific Attribute",
 	description = "Return a list of users stored in the array filtered by the attribute in the query parameter filter")
-	@GetMapping("/users")
+	@GetMapping(value = "/users", params = "filter")
 	public ResponseEntity<?> getUsersFilter(@Parameter(example = "name+co+z") @RequestParam String filter){
     	if(filter != null) {
     		//Devolver un Response OK
     		try {
     			//Separar el string recibido usando los signos (+)
-        		String[] fil = filter.split("\\+");
+        		String[] fil = filter.split("(\\+| )");
         		
         		//Devolver un Response Bad Request si el arreglo tiene mas de 3 elementos
-        		if (fil.length > 3) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        				.body("{\"error\": \"El parámetro Filter esta escrito incorrectamente\"}");
+        		if (fil.length != 3) {
+        			//Añadir una llave error al map para mostrarlo
+        			error.put("error", "El parámetro Filter esta escrito incorrectamente");
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        		}
         		//Devolver un Response OK y traer todos los usuarios que cumplan el filtro
         		else return ResponseEntity.ok(userSrv.getUsersFilter(fil [0], fil[1], fil[2]));
     		}catch(Exception e) {
     			//Devolver un Response Bad Request si hubo errores
+    			error.put("error", "El parámetro Filter tiene un error: " + e.getMessage());
         		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        				.body("{\"error\": \"Ocurrió un error al filtrar los Usuarios\"}");
+        				.body(error);
     		}    		
     	} else {
     		//Devolver un Response Bad Request
+    		error.put("error", "El parametro filter es nulo");
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"El parametro filter es nulo o esta vacío\"}");
+    				.body(error);
     	}
     }
 	
@@ -75,9 +84,10 @@ public class UserController {
 			//Devolver un Response OK y mostrar el usuario nuevo
 			return ResponseEntity.ok(userSrv.createUser(user));
 		}catch(Exception e) {
+			error.put("error", "Ocurrió un error al guardar el Usuario: " + e.getMessage());
 			//Devolver un Response Bad Request si hubo errores
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"Ocurrió un error al guardar el Usuario\"}");
+    				.body(error);
 		}   
 	}
 	
@@ -90,9 +100,10 @@ public class UserController {
 			//Devolver un Response OK y mostrar el usuario modificado
 			return ResponseEntity.ok(userSrv.updateUser(user, id));
 		}catch(Exception e) {
+			error.put("error", "Ocurrió un error al modificar el Usuario: " + e.getMessage());
 			//Devolver un Response Bad Request si hubo errores
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"No existe un usuario con este ID\"}");
+    				.body(error);
 		}   
 	}
 	
@@ -106,9 +117,10 @@ public class UserController {
 			userSrv.deleteUser(id);
 			return ResponseEntity.noContent().build();
 		}catch(Exception e) {
+			error.put("error", "Ocurrió un error al eliminar el Usuario: " + e.getMessage());
 			//Devolver un Response Bad Request si hubo errores
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    				.body("{\"error\": \"Ocurrió un error al eliminar el Usuario\"}");
+    				.body(error);
 		}   
 	}
 }
